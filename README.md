@@ -1,27 +1,45 @@
-# React + TypeScript + Vite
+Inside App.js
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+```
+export type RawNote = {
+  id: string;
+} & RawNoteData;
 
-Currently, two official plugins are available:
+export type RawNoteData = {
+  title: string;
+  markdown: string;
+  tagIds: string[];
+};
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+export type Note = {
+  id: string;
+} & NoteData;
 
-## Expanding the ESLint configuration
+export type NoteData = {
+  title: string;
+  markdown: string;
+  tags: Tag[];
+};
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+export type Tag = {
+  id: string;
+  label: string;
+};
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+# Why do RawNoteData stores just the tag ids instead of storing the whole tag object array (id along with label)?
+
+Consider a scenario where we add a functionality to update our tags. So our update tag
+function takes in tag id and updated label value for that tag. Once we run this function
+our tag gets updated in our tags array which we are keeping in local storage.
+
+Now consider if we were storing Tag object inside RawNoteData this tag label updation needs to be reflected there too. A way to do this would be to go inside every note then process tags array of individual note and update the label values accordingly but this sounds tedious and repetitive to implement.
+
+A better solution is to just store the tag ids inside RawNoteData. So when a tag get's
+updated it results in re-rendering of our App component and on execution of App component we can extract notes array with actual tag labels along with their ids from
+RawNoteData by finding updated label value correspondin to a tag id from updated Tag array this is possible because tag id remains the same only tag label can change.
+
+So in a way tagIds in our note refer the Tags array for any kind of mutation in our tags info.
+
+This would also make deletion of a tag much easier which is a mutation in our tags array.
