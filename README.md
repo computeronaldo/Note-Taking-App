@@ -43,3 +43,5 @@ RawNoteData by finding updated label value correspondin to a tag id from updated
 So in a way tagIds in our note refer the Tags array for any kind of mutation in our tags info.
 
 This would also make deletion of a tag much easier which is a mutation in our tags array.
+
+In essence, the main idea is to maintain all tag related information at once place and provide a unique identifier to all other data pieces (RawNoteData in this case) so that they can refer to tag related information they require. Now whatever mutation we do our tags data will be reflected in other data pieces that are referring to tag info via the unique identifier we provided. So we have a single source of truth for our data inside for tags.
