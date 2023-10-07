@@ -2,6 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Container } from "react-bootstrap";
 import { Routes, Route, Navigate } from "react-router-dom";
 import NewNote from "./components/NewNote";
+import NoteList from "./components/NoteList";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { useMemo } from "react";
 import { v4 as uuidV4 } from "uuid";
@@ -66,7 +67,10 @@ const App = () => {
   return (
     <Container className="my-4">
       <Routes>
-        <Route path="/" element={<h1>Hi</h1>} />
+        <Route
+          path="/"
+          element={<NoteList availableTags={tags} notesData={notesWithTags} />}
+        />
         <Route
           path="/new"
           element={

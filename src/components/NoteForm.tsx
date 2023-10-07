@@ -56,8 +56,7 @@ const NoteForm = ({ onSubmit, onAddTag, availableTags }: NoteFormProps) => {
                   return { label: tag.label, value: tag.id };
                 })}
                 // onChange handles deletion of an option and updates selected tags 
-                onChange={(tags) => {
-                  console.log(tags);
+                onChange={(tags) => { 
                   setSelectedTags(
                     tags.map((tag) => {
                       return { label: tag.label, id: tag.value };
