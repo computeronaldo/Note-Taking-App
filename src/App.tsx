@@ -3,6 +3,9 @@ import { Container } from "react-bootstrap";
 import { Routes, Route, Navigate } from "react-router-dom";
 import NewNote from "./components/NewNote";
 import NoteList from "./components/NoteList";
+import NoteLayout from "./components/NoteLayout";
+import Note from "./components/Note";
+import EditNote from "./components/EditNote";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { useMemo } from "react";
 import { v4 as uuidV4 } from "uuid";
@@ -45,6 +48,29 @@ const App = () => {
     });
   }, [notes, tags]);
 
+  const onDeleteNote = (id: string) => {
+    setNotes((prevNotes) => {
+      return prevNotes.filter((note) => {
+        return note.id !== id;
+      });
+    });
+  };
+
+  const onUpdateNote = (id: string, { tags, ...data }: NoteData) => {
+    setNotes((prevNotes) => {
+      return prevNotes.map((note) => {
+        if (note.id === id) {
+          return {
+            ...note,
+            ...data,
+            tagIds: tags.map((tag) => tag.id),
+          };
+        } else {
+          return note;
+        }
+      });
+    });
+  };
   const onCreateNote = ({ tags, ...data }: NoteData) => {
     setNotes((prevNotes) => {
       return [
@@ -81,9 +107,18 @@ const App = () => {
             />
           }
         />
-        <Route path="/:id">
-          <Route index element={<h1>Show</h1>} />
-          <Route path="edit" element={<h1>Edit</h1>} />
+        <Route path="/:id" element={<NoteLayout notesData={notesWithTags} />}>
+          <Route index element={<Note onDelete={onDeleteNote} />} />
+          <Route
+            path="edit"
+            element={
+              <EditNote
+                onSubmit={onUpdateNote}
+                onAddTag={addTag}
+                availableTags={tags}
+              />
+            }
+          />
         </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

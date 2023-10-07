@@ -3,18 +3,19 @@ import { Row, Col, Stack, Button, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import ReactSelect from "react-select";
 import { Tag } from "../App";
+import NoteCard from "./NoteCard";
 
-type NotesData = {
+export type NoteData = {
   tags: Tag[];
   id: string;
   title: string;
   markdown: string;
   tagIds: string[];
-}[];
+};
 
 type NoteListPropsType = {
   availableTags: Tag[];
-  notesData: NotesData;
+  notesData: NoteData[];
 };
 
 const NoteList = ({ availableTags, notesData }: NoteListPropsType) => {
@@ -95,7 +96,7 @@ const NoteList = ({ availableTags, notesData }: NoteListPropsType) => {
         {filteredNotes.map((note) => {
           return (
             <Col key={note.id}>
-              <div>{note.title}</div>
+              <NoteCard id={note.id} title={note.title} tags={note.tags} />
             </Col>
           );
         })}
