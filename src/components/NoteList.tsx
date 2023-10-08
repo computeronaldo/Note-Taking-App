@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import ReactSelect from "react-select";
 import { Tag } from "../App";
 import NoteCard from "./NoteCard";
+import EditTagModal from "./EditTagModal";
 
 export type NoteData = {
   tags: Tag[];
@@ -16,11 +17,14 @@ export type NoteData = {
 type NoteListPropsType = {
   availableTags: Tag[];
   notesData: NoteData[];
+  onDeleteTag: (id: string) => void
+  onUpdateTag: (id: string, label: string) => void
 };
 
-const NoteList = ({ availableTags, notesData }: NoteListPropsType) => {
+const NoteList = ({ availableTags, notesData, onDeleteTag, onUpdateTag }: NoteListPropsType) => {
   const [title, setTitle] = useState<string>("");
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+  const [editTagsModalIsOpen, setEditTagsModalIsOpen] = useState<boolean>(false);
 
   const haveCommonTags = (noteTags: Tag[], selectedTags: Tag[]) => {
     return noteTags.some((tag1) =>
@@ -51,7 +55,7 @@ const NoteList = ({ availableTags, notesData }: NoteListPropsType) => {
             <Link to="/new">
               <Button variant="primary">Create</Button>
             </Link>
-            <Button variant="outline-secondary">Edit Tags</Button>
+            <Button variant="outline-secondary" onClick={() => setEditTagsModalIsOpen(true)}>Edit Tags</Button>
           </Stack>
         </Col>
       </Row>
@@ -101,6 +105,7 @@ const NoteList = ({ availableTags, notesData }: NoteListPropsType) => {
           );
         })}
       </Row>
+      <EditTagModal availableTags={availableTags} show={editTagsModalIsOpen} handleClose={() => setEditTagsModalIsOpen(false)} onDeleteTag={onDeleteTag} onUpdateTag={onUpdateTag}/>
     </>
   );
 };

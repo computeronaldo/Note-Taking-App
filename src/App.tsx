@@ -48,6 +48,29 @@ const App = () => {
     });
   }, [notes, tags]);
 
+  const onUpdateTag = (id: string, label: string) => {
+    setTags((prevTags) => {
+      return prevTags.map((tag) => {
+        if (tag.id === id) {
+          return {
+            ...tag,
+            label,
+          };
+        } else {
+          return tag;
+        }
+      });
+    });
+  };
+
+  const onDeleteTag = (id: string) => {
+    setTags((prevTags) => {
+      return prevTags.filter((tag) => {
+        return tag.id !== id;
+      });
+    });
+  };
+
   const onDeleteNote = (id: string) => {
     setNotes((prevNotes) => {
       return prevNotes.filter((note) => {
@@ -95,7 +118,14 @@ const App = () => {
       <Routes>
         <Route
           path="/"
-          element={<NoteList availableTags={tags} notesData={notesWithTags} />}
+          element={
+            <NoteList
+              availableTags={tags}
+              notesData={notesWithTags}
+              onDeleteTag={onDeleteTag}
+              onUpdateTag={onUpdateTag}
+            />
+          }
         />
         <Route
           path="/new"
